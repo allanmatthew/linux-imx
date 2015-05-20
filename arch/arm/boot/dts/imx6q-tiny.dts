@@ -1,0 +1,170 @@
+/*
+ * Copyright 2015 3DRobotics
+ *
+ * Author: Allan Matthew
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License version 2 as
+ * published by the Free Software Foundation.
+ *
+ */
+
+/dts-v1/;
+#include "imx6q.dtsi"
+
+/ {
+	model = "Tiny i.MX6 Quad Board";
+	compatible = "tiny,imx6q-tiny", "fsl,imx6q";
+
+	memory {
+		reg = <0x10000000 0x40000000>;
+	};
+
+        leds {
+                compatible = "gpio-leds";
+
+                user-led {
+                        gpios = <&gpio1 2 0>;
+                        linux,default-trigger = "heartbeat";
+			default-state = "off";
+                };
+        };
+};
+
+&iomuxc {
+	imx6q-tiny {
+		pinctrl_enet: enetgrp {
+                        fsl,pins = <
+                                MX6QDL_PAD_ENET_MDIO__ENET_MDIO         0x1b0b0
+                                MX6QDL_PAD_ENET_MDC__ENET_MDC           0x1b0b0
+                                MX6QDL_PAD_RGMII_TXC__RGMII_TXC         0x1b0b0
+                                MX6QDL_PAD_RGMII_TD0__RGMII_TD0         0x1b0b0
+                                MX6QDL_PAD_RGMII_TD1__RGMII_TD1         0x1b0b0
+                                MX6QDL_PAD_RGMII_TD2__RGMII_TD2         0x1b0b0
+                                MX6QDL_PAD_RGMII_TD3__RGMII_TD3         0x1b0b0
+                                MX6QDL_PAD_RGMII_TX_CTL__RGMII_TX_CTL   0x1b0b0
+                                MX6QDL_PAD_ENET_REF_CLK__ENET_TX_CLK    0x1b0b0
+                                MX6QDL_PAD_RGMII_RXC__RGMII_RXC         0x1b0b0
+                                MX6QDL_PAD_RGMII_RD0__RGMII_RD0         0x1b0b0
+                                MX6QDL_PAD_RGMII_RD1__RGMII_RD1         0x1b0b0
+                                MX6QDL_PAD_RGMII_RD2__RGMII_RD2         0x1b0b0
+                                MX6QDL_PAD_RGMII_RD3__RGMII_RD3         0x1b0b0
+                                MX6QDL_PAD_RGMII_RX_CTL__RGMII_RX_CTL   0x1b0b0
+                                MX6QDL_PAD_GPIO_16__ENET_REF_CLK        0x4001b0a8
+                        >;
+                };
+
+		pinctrl_uart1: uart1grp {
+			fsl,pins = <
+				MX6QDL_PAD_SD3_DAT7__UART1_TX_DATA	0x1b0b1
+				MX6QDL_PAD_SD3_DAT6__UART1_RX_DATA	0x1b0b1
+				MX6QDL_PAD_EIM_D20__UART1_RTS_B		0x1b0b1
+				MX6QDL_PAD_EIM_D19__UART1_CTS_B		0x1b0b1
+			>;
+		};
+
+		pinctrl_uart2: uart2grp {
+			fsl,pins = <
+				MX6QDL_PAD_SD3_DAT5__UART2_TX_DATA	0x1b0b1
+				MX6QDL_PAD_SD3_DAT4__UART2_RX_DATA	0x1b0b1
+			>;
+		};
+		
+		pinctrl_uart3: uart3grp {
+			fsl,pins = <
+				MX6QDL_PAD_EIM_D24__UART3_TX_DATA	0x1b0b1
+				MX6QDL_PAD_EIM_D25__UART3_RX_DATA	0x1b0b1
+				MX6QDL_PAD_EIM_EB3__UART3_RTS_B		0x1b0b1
+				MX6QDL_PAD_EIM_D23__UART3_CTS_B		0x1b0b1
+			>;
+		};
+		
+		pinctrl_uart4: uart4grp {
+			fsl,pins = <
+				MX6QDL_PAD_KEY_COL0__UART4_TX_DATA	0x1b0b1
+				MX6QDL_PAD_KEY_ROW0__UART4_RX_DATA	0x1b0b1
+			>;
+		};
+		
+		pinctrl_uart5: uart5grp {
+			fsl,pins = <
+				MX6QDL_PAD_KEY_COL1__UART5_TX_DATA	0x1b0b1
+				MX6QDL_PAD_KEY_ROW1__UART5_RX_DATA	0x1b0b1
+			>;
+		};
+
+		pinctrl_usdhc3: usdhc3grp {
+			fsl,pins = <
+				MX6QDL_PAD_SD3_CMD__SD3_CMD		0x17059
+				MX6QDL_PAD_SD3_CLK__SD3_CLK		0x10059
+				MX6QDL_PAD_SD3_DAT0__SD3_DATA0		0x17059
+				MX6QDL_PAD_SD3_DAT1__SD3_DATA1		0x17059
+				MX6QDL_PAD_SD3_DAT2__SD3_DATA2		0x17059
+				MX6QDL_PAD_SD3_DAT3__SD3_DATA3		0x17059
+			>;
+		};
+
+		pinctrl_hog: hoggrp {
+			fsl,pins = <
+				MX6QDL_PAD_SD3_RST__GPIO7_IO08		0x80000000
+				MX6QDL_PAD_NANDF_CS3__GPIO6_IO16	0x80000000
+			>;
+		};
+
+	};
+};
+
+&fec {
+        pinctrl-names = "default";
+        pinctrl-0 = <&pinctrl_enet>;
+        phy-mode = "rgmii";
+        phy-reset-gpios = <&gpio1 25 0>;
+        fsl,magic-packet;
+        status = "okay";
+};
+
+&sata {
+	status = "okay";
+};
+
+&uart1 {
+	pinctrl-names = "default";
+	pinctrl-0 = <&pinctrl_uart1>;
+	fsl,uart-has-rtscts;
+	status = "okay";
+};
+
+&uart2 {
+	pinctrl-names = "default";
+	pinctrl-0 = <&pinctrl_uart2>;
+	status = "okay";
+};
+
+&uart3 {
+	pinctrl-names = "default";
+	pinctrl-0 = <&pinctrl_uart3>;
+	fsl,uart-has-rtscts;
+	status = "okay";
+};
+
+&uart4 {
+	pinctrl-names = "default";
+	pinctrl-0 = <&pinctrl_uart4>;
+	status = "okay";
+};
+
+&uart5 {
+	pinctrl-names = "default";
+	pinctrl-0 = <&pinctrl_uart5>;
+	status = "okay";
+};
+
+&usdhc3 {
+	pinctrl-names = "default";
+	pinctrl-0 = <&pinctrl_usdhc3>;
+        bus-width = <4>;
+        cd-gpios = <&gpio7 8 0>;
+        wp-gpios = <&gpio6 16 0>;
+	non-removable;
+	status = "okay";
+};
